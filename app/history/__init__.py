@@ -1,60 +1,72 @@
+""" Manages the history of the commands sent to the CLI"""
 import pandas as pd
 import os
 
 class HistoryManager:
-    def __init__(self, file_name='history.csv'):
-        self.file_name = file_name
-        # Load existing history if the file exists, otherwise create an empty dataframe
-        if os.path.exists(self.file_name):
-            self.history = pd.read_csv(self.file_name)
-        else:
-            # Set columns as operation, num1, num2
-            self.history = pd.DataFrame(columns=['Operation', 'Num1', 'Num2', 'Result'])
+    file_name = 'history.csv'
 
-    def add_record(self, operation, num1, num2, result):
+    @staticmethod
+    def add_record(operation, num1, num2, result):
+        # Load existing history if the file exists, otherwise create an empty dataframe
+        if os.path.exists(HistoryManager.file_name):
+            history = pd.read_csv(HistoryManager.file_name)
+        else:
+            history = pd.DataFrame(columns=['Operation', 'Num1', 'Num2', 'Result'])
+        
         # Add a new record with operation and numbers
         new_record = {'Operation': operation, 'Num1': num1, 'Num2': num2, 'Result': result}
-        self.history = self.history.append(new_record, ignore_index=True)
-        self.save_history()
+        history = history._append(new_record, ignore_index=True)
+        
+        # Save the updated history
+        history.to_csv(HistoryManager.file_name, index=False)
 
-    def save_history(self):
-        # Save the history to the CSV file
-        self.history.to_csv(self.file_name, index=False)
-
-    def load_history(self):
+    @staticmethod
+    def load_history():
         # Load history from the CSV file if it exists
-        if os.path.exists(self.file_name):
-            self.history = pd.read_csv(self.file_name)
+        if os.path.exists(HistoryManager.file_name):
+            history = pd.read_csv(HistoryManager.file_name)
             print("History loaded successfully.")
+            print(history)
         else:
             print("No history found.")
-    
-    def clear_history(self):
+
+    @staticmethod
+    def clear_history():
         # Clear the in-memory history and delete the file
-        self.history = pd.DataFrame(columns=['Operation', 'Num1', 'Num2', 'Result'])
-        if os.path.exists(self.file_name):
-            os.remove(self.file_name)
-        print("History cleared.")
-
-    def delete_record(self, index):
-        # Delete a specific record by its index
-        if index in self.history.index:
-            self.history = self.history.drop(index)
-            self.save_history()
-            print(f"Record at index {index} deleted.")
+        if os.path.exists(HistoryManager.file_name):
+            os.remove(HistoryManager.file_name)
+            print("History cleared.")
         else:
-            print(f"Record at index {index} not found.")
+            print("No history to clear.")
 
-    def display_history(self):
+    @staticmethod
+    def delete_record(index):
+        # Load existing history if the file exists
+        if os.path.exists(HistoryManager.file_name):
+            history = pd.read_csv(HistoryManager.file_name)
+            if index in history.index:
+                # Drop the record and save updated history
+                history = history.drop(index)
+                history.to_csv(HistoryManager.file_name, index=False)
+                print(f"Record at index {index} deleted.")
+            else:
+                print(f"Record at index {index} not found.")
+        else:
+            print("No history to delete from.")
+
+    @staticmethod
+    def display_history():
         # Display the current history in memory
-        if self.history.empty:
-            print("No records in history.")
+        if os.path.exists(HistoryManager.file_name):
+            history = pd.read_csv(HistoryManager.file_name)
+            if history.empty:
+                print("No records in history.")
+            else:
+                print(history)
         else:
-            print(self.history)
+            print("No history found.")
 
-
-# history_manager = HistoryManager()
-# history_manager.add_record("addition", 5, 5, 10)
-# history_manager.display_history()
-# history_manager.delete_record(0)
-# history_manager.clear_history()
+# HistoryManager.add_record("add", 5, 5, 10)
+# HistoryManager.display_history()
+# HistoryManager.delete_record(0)
+# HistoryManager.clear_history()

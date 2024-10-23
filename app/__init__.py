@@ -6,6 +6,7 @@ import logging
 import logging.config
 from dotenv import load_dotenv
 from app.commands import Command, CommandHandler
+from app.history import HistoryManager
 from app.plugins.menu import MenuCommand
 
 
@@ -19,6 +20,7 @@ class App:
         self.settings = self.load_environment_variables()
         self.settings.setdefault('ENVIRONMENT', 'PRODUCTION')
         self.command_handler = CommandHandler()
+        self.history = HistoryManager() 
 
     def configure_logging(self):
         """Configures logging"""
@@ -79,8 +81,12 @@ class App:
                 if user_input:
                     command = user_input[0].lower()
                     args = user_input[1:]
-                    self.command_handler.execute_command(command, args)
+                    result = self.command_handler.execute_command(command, args)
+                    if command in ["add","subtract","divide","multiply"]:
+                        self.history.add_record(command, args[0], args[1], result)
         except App.Error as e:
             logging.info("Error while executing command %s",e)
         finally:
             logging.info("Application shutdown.")
+
+# Load, save, clear, and delete history records
