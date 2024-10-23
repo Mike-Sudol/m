@@ -41,18 +41,21 @@ class HistoryManager:
 
     @staticmethod
     def delete_record(index):
-        # Load existing history if the file exists
         if os.path.exists(HistoryManager.file_name):
-            history = pd.read_csv(HistoryManager.file_name)
-            if index in history.index:
-                # Drop the record and save updated history
-                history = history.drop(index)
-                history.to_csv(HistoryManager.file_name, index=False)
-                print(f"Record at index {index} deleted.")
-            else:
-                print(f"Record at index {index} not found.")
+            try: 
+                history = pd.read_csv(HistoryManager.file_name)
+                index = int(index)
+                
+                if 0 <= index < len(history):
+                    history = history.drop(history.index[index])
+                    history.to_csv(HistoryManager.file_name, index=False)
+                    print(f"Record at position {index} deleted.")
+                else:
+                    print(f"Record at position {index} not found. Valid positions are 0 to {len(history)-1}.")
+            except Exception as e:
+                print(f"Error deleting record: {e}")
         else:
-            print("No history to delete from.")
+            print("No history file exists.")
 
     @staticmethod
     def save_history(): 
