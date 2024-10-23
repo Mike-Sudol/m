@@ -1,4 +1,4 @@
-# IS601 Homework 5
+# IS601 Midterm
 
 # How to Run Coverage Test / Main App
 
