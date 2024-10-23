@@ -16,6 +16,22 @@ pytest --cov
 
 python3 main.py
 
+## Commands
+
+```
+- add : num1 num2  Addition
+- subtract : Subtraction
+- multiply : Multiplication
+- divide : Division
+- talk : Shows the list of commands
+- menu : Shows the list of commands
+- exit : Exit the application
+- display : Exit the application
+- load : Exit the application
+- save : Exit the application
+- delete : Exit the application
+- clear : Exit the application
+```
 ## Design Patterns
 
 You are required to write a short description and link to your implememtation of the design patterns you use.
