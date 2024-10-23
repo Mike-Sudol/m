@@ -6,7 +6,22 @@ import pandas as pd
 class HistoryManager:
     """Manages History for the CLI"""
     file_name = 'history.csv'
+    _directory = ''
     _history = pd.DataFrame(columns=['Operation', 'Num1', 'Num2', 'Result'])
+
+    @staticmethod
+    def set_directory(directory_path):
+        """Set the directory where the history file will be saved"""
+        if os.path.exists(directory_path):
+            HistoryManager._directory = directory_path
+            logging.info(f"History file directory set to: {directory_path}")
+        else:
+            raise FileNotFoundError(f"The directory {directory_path} does not exist.")
+
+    @staticmethod
+    def get_file_path():
+        """Get the full file path for the history file"""
+        return os.path.join(HistoryManager._directory, HistoryManager.file_name)
 
     @staticmethod
     def add_record(operation, num1, num2, result):
@@ -23,8 +38,9 @@ class HistoryManager:
     @staticmethod
     def load_history():
         """Load history from the CSV file if it exists"""
-        if os.path.exists(HistoryManager.file_name):
-            HistoryManager._history = pd.read_csv(HistoryManager.file_name)
+        file_path = HistoryManager.get_file_path()
+        if os.path.exists(file_path):
+            HistoryManager._history = pd.read_csv(file_path)
             print("History loaded successfully.")
             logging.info("History Loaded successfully")
             print(HistoryManager._history)
@@ -36,9 +52,10 @@ class HistoryManager:
     @staticmethod
     def clear_history():
         """Clear the in-memory history and delete the file"""
+        file_path = HistoryManager.get_file_path()
         HistoryManager._history = pd.DataFrame(columns=['Operation', 'Num1', 'Num2', 'Result'])
-        if os.path.exists(HistoryManager.file_name):
-            os.remove(HistoryManager.file_name)
+        if os.path.exists(file_path):
+            os.remove(file_path)
             print("History cleared.")
             logging.info("History cleared successfully")
         else:
@@ -64,8 +81,9 @@ class HistoryManager:
     @staticmethod
     def save_history():
         """Save the in-memory history to CSV"""
+        file_path = HistoryManager.get_file_path()
         try:
-            HistoryManager._history.to_csv(HistoryManager.file_name, index=False)
+            HistoryManager._history.to_csv(file_path, index=False)
             print("Saved Successfully")
             logging.info("History saved successfully")
         except OSError as e:

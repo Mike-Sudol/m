@@ -1,5 +1,4 @@
 """Test Subtracting"""
-from decimal import InvalidOperation
 import pytest
 from app.commands import CommandHandler
 from app.plugins.subtract import SubtractionCommand

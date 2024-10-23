@@ -1,5 +1,4 @@
 """Test Adding"""
-from decimal import InvalidOperation
 import pytest
 from app.commands import CommandHandler
 from app.plugins.add import AddCommand

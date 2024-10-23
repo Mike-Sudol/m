@@ -21,6 +21,7 @@ class App:
         self.settings.setdefault('ENVIRONMENT', 'PRODUCTION')
         self.command_handler = CommandHandler()
         self.history = HistoryManager()
+        self.history.set_directory(self.get_environment_variable("DATA_DIR"))
 
     def configure_logging(self):
         """Configures logging"""
@@ -90,6 +91,5 @@ class App:
         finally:
             logging.info("Application shutdown.")
 
-# Testing and Git Action
-# Environment Flexibility
+# Testing and Git Action 
 # Write Up + Video + How to start Readme
