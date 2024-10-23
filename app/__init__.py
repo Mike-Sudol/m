@@ -42,19 +42,30 @@ class App:
         """Custom exception for bad input"""
 
     def load_plugins(self):
-        """ Load Plugins """
+        """ Load Plugins """ 
         plugins_package = 'app.plugins'
-        for _, plugin_name, is_pkg in pkgutil.iter_modules([plugins_package.replace('.', '/')]):
+        plugins_path = plugins_package.replace('.', '/')
+        if not os.path.exists(plugins_path):
+            logging.warning(f"Plugins directory '{plugins_path}' not found.")
+            return
+        for _, plugin_name, is_pkg in pkgutil.iter_modules([plugins_path]):
             if is_pkg:
-                plugin_module = importlib.import_module(f'{plugins_package}.{plugin_name}')
-                for item_name in dir(plugin_module):
-                    item = getattr(plugin_module, item_name)
-                    try:
-                        if issubclass(item, (Command)):
-                            self.command_handler.register_command(plugin_name, item())
-                    except TypeError as e:
-                        logging.error("Error importing plugin %s : %s",plugin_name,e)
+                try:
+                    plugin_module = importlib.import_module(f'{plugins_package}.{plugin_name}')
+                    self.register_plugin_commands(plugin_module, plugin_name)
+                except ImportError as e:
+                    logging.error(f"Error importing plugin {plugin_name}: {e}")
 
+
+
+    def register_plugin_commands(self, plugin_module, plugin_name):
+        for item_name in dir(plugin_module):
+            item = getattr(plugin_module, item_name)
+            if isinstance(item, type) and issubclass(item, Command) and item is not Command: 
+                if plugin_name == "menu":
+                    continue
+                self.command_handler.register_command(plugin_name, item())
+                logging.info(f"Command '{plugin_name}' from plugin '{plugin_name}' registered.")
 
     def start(self):
         """ Start Application """

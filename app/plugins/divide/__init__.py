@@ -19,7 +19,6 @@ class DivideCommand(Command):
 
         if number2 == 0:
             raise ZeroDivisionError("Error: Division by zero is not allowed.")
-        
         logging.info("Dividing %s / %s",number1,number2)
         result = number1 / number2
         print(f"The result of {number1} / {number2} is: {result}")
