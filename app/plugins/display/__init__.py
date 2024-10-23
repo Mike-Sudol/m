@@ -10,5 +10,5 @@ class DisplayCommand(Command):
 
     def execute(self, args):
         """ Execute Display """
-        logging.info("Trying to display history") 
-        HistoryManager.display_history() 
+        logging.info("Trying to display history")
+        HistoryManager.display_history()

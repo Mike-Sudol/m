@@ -10,5 +10,6 @@ class LoadCommand(Command):
 
     def execute(self, args):
         """ Execute Load """
-        logging.info("Trying to display history") 
-        HistoryManager.load_history() 
+        logging.info("Trying to display history")
+        HistoryManager.load_history()
+        

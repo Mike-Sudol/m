@@ -1,18 +1,24 @@
 """ Manages the history of the commands sent to the CLI"""
 import logging
-import pandas as pd
 import os
+import pandas as pd
 
 class HistoryManager:
+    """Manages History for the CLI"""
     file_name = 'history.csv'
     _history = pd.DataFrame(columns=['Operation', 'Num1', 'Num2', 'Result'])
 
     @staticmethod
     def add_record(operation, num1, num2, result):
         """Add a record to the history"""
-        new_record = {'Operation': operation, 'Num1': num1, 'Num2': num2, 'Result': result}
-        HistoryManager._history = HistoryManager._history._append(new_record, ignore_index=True)
-        logging.info(f"Record added to history'{new_record}")
+        new_record = pd.DataFrame({
+            'Operation': [operation],
+            'Num1': [num1],
+            'Num2': [num2],
+            'Result': [result]
+        })
+        HistoryManager._history = pd.concat([HistoryManager._history, new_record], ignore_index=True)
+        logging.info(f"Record added to history: {new_record.iloc[0].to_dict()}")
 
     @staticmethod
     def load_history():
@@ -51,7 +57,7 @@ class HistoryManager:
             else:
                 print(f"Record at position {index} not found. Valid positions are 0 to {len(HistoryManager._history)-1}.")
                 logging.warning(f"Record at position {index} not found. Valid positions are 0 to {len(HistoryManager._history)-1}.")
-        except Exception as e:
+        except KeyError as e:
             print(f"Error deleting record: {e}")
             logging.error(f"Error deleting record: {e}")
 
@@ -62,7 +68,7 @@ class HistoryManager:
             HistoryManager._history.to_csv(HistoryManager.file_name, index=False)
             print("Saved Successfully")
             logging.info("History saved successfully")
-        except Exception as e:
+        except OSError as e:
             print(f"Error while trying to save history: {e}")
             logging.error(f"Error while trying to save history: {e}")
 

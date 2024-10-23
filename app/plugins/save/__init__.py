@@ -10,5 +10,5 @@ class SaveCommand(Command):
 
     def execute(self, args):
         """ Execute Save """
-        logging.info("Trying to save history") 
+        logging.info("Trying to save history")
         HistoryManager.save_history()

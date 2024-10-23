@@ -10,5 +10,5 @@ class ClearCommand(Command):
 
     def execute(self, args):
         """ Execute Clear """
-        logging.info("Trying to clear history") 
+        logging.info("Trying to clear history")
         HistoryManager.clear_history()

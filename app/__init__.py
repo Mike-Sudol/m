@@ -20,7 +20,7 @@ class App:
         self.settings = self.load_environment_variables()
         self.settings.setdefault('ENVIRONMENT', 'PRODUCTION')
         self.command_handler = CommandHandler()
-        self.history = HistoryManager() 
+        self.history = HistoryManager()
 
     def configure_logging(self):
         """Configures logging"""
@@ -61,9 +61,10 @@ class App:
 
 
     def register_plugin_commands(self, plugin_module, plugin_name):
+        """Register a Plugin Command to the CLI"""
         for item_name in dir(plugin_module):
             item = getattr(plugin_module, item_name)
-            if isinstance(item, type) and issubclass(item, Command) and item is not Command: 
+            if isinstance(item, type) and issubclass(item, Command) and item is not Command:
                 if plugin_name == "menu":
                     continue
                 self.command_handler.register_command(plugin_name, item())
@@ -91,4 +92,4 @@ class App:
 
 # Testing and Git Action
 # Environment Flexibility
-# Write Up + Video + How to start Readme 
+# Write Up + Video + How to start Readme
