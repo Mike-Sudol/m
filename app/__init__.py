@@ -89,4 +89,4 @@ class App:
         finally:
             logging.info("Application shutdown.")
 
-# Load, save, clear, and delete history records
+# save, clear, and delete history records
