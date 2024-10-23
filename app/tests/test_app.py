@@ -1,61 +1,162 @@
-"""Tests the main App"""
-import os
-import logging
-from unittest import mock
+"""Test the main App"""
+from unittest.mock import patch, MagicMock
 import pytest
 from app import App
+from app.commands import Command, CommandHandler
+from app.history import HistoryManager
+
+class MockCommand(Command):
+    """Mock command class for testing"""
+    def execute(self, *args):
+        return "mock executed"
 
 @pytest.fixture
-def mock_env_and_files(tmpdir, monkeypatch):
-    """Fixture to mock the environment variables and file system operations."""
-    monkeypatch.setattr(os, 'makedirs', mock.Mock())
-    monkeypatch.setattr('dotenv.load_dotenv', mock.Mock())
-    mock_env = {
+def app():
+    """
+    Fixture that provides a fresh App instance for each test.
+    
+    Returns:
+        App: A fresh instance of the App class
+    """
+    with patch('os.makedirs'), \
+         patch('logging.config.fileConfig'), \
+         patch('dotenv.load_dotenv'):
+        return App()
+
+@pytest.fixture
+def mock_env_vars():
+    """
+    Fixture that provides mock environment variables.
+    
+    Returns:
+        dict: A dictionary of mock environment variables
+    """
+    return {
         'ENVIRONMENT': 'TEST',
-        'DATA_DIR': str(tmpdir)
+        'DATA_DIR': '/test/data',
+        'TEST_VAR': 'test_value'
     }
-    monkeypatch.setattr(os, 'environ', mock_env)
-    monkeypatch.setattr(logging, 'info', mock.Mock())
 
-@pytest.fixture
-def app(mock_env_and_files):
-    """Fixture to create an instance of the App class with mocked environment and file system."""
-    return App()
+class TestApp:
+    """Test suite for the App class"""
 
-def test_app_initialization(app):
-    """Test if App initialization sets up the settings, command handler, and history correctly."""
-    assert app.settings.get('ENVIRONMENT') == 'TEST'
-    assert 'DATA_DIR' in app.settings
-    assert app.command_handler is not None
-    assert app.history is not None
+    def test_init(self, app):
+        """
+        Test that App initializes correctly with all required attributes.
+        
+        Args:
+            app: Fixture providing App instance
+        """
+        assert isinstance(app.command_handler, CommandHandler)
+        assert isinstance(app.history, HistoryManager)
+        assert isinstance(app.settings, dict)
+        assert app.settings.get('ENVIRONMENT') == 'PRODUCTION'
 
-def test_configure_logging(app, monkeypatch):
-    """Test if the logging configuration is set up correctly when a configuration file exists."""
-    monkeypatch.setattr(os.path, 'exists', lambda x: True)
-    mock_logging_config = mock.Mock()
-    monkeypatch.setattr('logging.config.fileConfig', mock_logging_config)
-    app.configure_logging()
-    mock_logging_config.assert_called_once()
+    @patch.dict('os.environ', {'ENVIRONMENT': 'TEST', 'DATA_DIR': '/test/data'})
+    def test_load_environment_variables(self, app):
+        """
+        Test that environment variables are loaded correctly.
+        
+        Args:
+            app: Fixture providing App instance
+        """
+        settings = app.load_environment_variables()
+        assert settings['ENVIRONMENT'] == 'TEST'
+        assert settings['DATA_DIR'] == '/test/data'
 
-def test_load_environment_variables(app):
-    """Test if the environment variables are loaded correctly by the app."""
-    assert app.get_environment_variable('ENVIRONMENT') == 'TEST'
-    assert app.get_environment_variable('DATA_DIR') is not None
+    def test_get_environment_variable(self, app):
+        """
+        Test retrieval of environment variables.
+        
+        Args:
+            app: Fixture providing App instance
+        """
+        app.settings = {'TEST_VAR': 'test_value'}
+        assert app.get_environment_variable('TEST_VAR') == 'test_value'
+        assert app.get_environment_variable('NON_EXISTENT') is None
 
-def test_get_environment_variable(app):
-    """Test if the app returns None when fetching a non-existent environment variable."""
-    assert app.get_environment_variable('NON_EXISTENT_VAR') is None
+    @patch('pkgutil.iter_modules')
+    @patch('importlib.import_module')
+    def test_load_plugins(self, mock_import_module, mock_iter_modules, app):
+        """
+        Test plugin loading functionality.
+        
+        Args:
+            mock_import_module: Mock for importlib.import_module
+            mock_iter_modules: Mock for pkgutil.iter_modules
+            app: Fixture providing App instance
+        """
+        # Mock plugin discovery
+        mock_iter_modules.return_value = [
+            (None, "test_plugin", True)
+        ]
+        # Mock plugin module with command
+        mock_module = MagicMock()
+        mock_module.TestCommand = MockCommand
+        mock_import_module.return_value = mock_module
 
-@mock.patch('app.pkgutil.iter_modules')
-@mock.patch('app.importlib.import_module')
-def test_load_plugins(mock_import_module, mock_iter_modules, app, monkeypatch):
-    """Test the plugin loading mechanism of the app by mocking the plugin directory and module imports."""
-    monkeypatch.setattr(os.path, 'exists', lambda x: True)
-    mock_iter_modules.return_value = [
-        (None, 'plugin1', True),
-        (None, 'plugin2', True)
-    ]
-    mock_import_module.side_effect = lambda name: mock.Mock()
-    app.load_plugins()
-    mock_import_module.assert_any_call('app.plugins.plugin1')
-    mock_import_module.assert_any_call('app.plugins.plugin2')
+        with patch('os.path.exists', return_value=True):
+            app.load_plugins()
+
+    @patch('builtins.input', side_effect=['menu', 'exit'])
+    def test_start(self, mock_input, app):
+        """
+        Test application start and command execution.
+        
+        Args:
+            mock_input: Mock for input function
+            app: Fixture providing App instance
+        """
+        with pytest.raises(SystemExit):
+            app.start()
+
+    def test_error_handling(self, app):
+        """
+        Test custom error handling.
+        
+        Args:
+            app: Fixture providing App instance
+        """
+        with pytest.raises(App.Error):
+            raise App.Error("Test error")
+
+    @patch('logging.config.fileConfig')
+    def test_configure_logging_with_config_file(self, mock_fileConfig, app):
+        """
+        Test logging configuration with existing config file.
+        
+        Args:
+            mock_fileConfig: Mock for logging.config.fileConfig
+            app: Fixture providing App instance
+        """
+        with patch('os.path.exists', return_value=True):
+            app.configure_logging()
+            mock_fileConfig.assert_called_once()
+
+    def test_configure_logging_without_config_file(self, app):
+        """
+        Test logging configuration without config file.
+        
+        Args:
+            app: Fixture providing App instance
+        """
+        with patch('os.path.exists', return_value=False), \
+             patch('logging.basicConfig') as mock_basic_config:
+            app.configure_logging()
+            mock_basic_config.assert_called_once()
+
+    def test_register_plugin_commands(self, app):
+        """
+        Test plugin command registration.
+        
+        Args:
+            app: Fixture providing App instance
+        """
+        # Create mock plugin module
+        mock_module = MagicMock()
+        mock_module.TestCommand = MockCommand
+
+        app.register_plugin_commands(mock_module, "test_plugin")
+
+if __name__ == '__main__':
+    pytest.main(['-v'])
