@@ -6,7 +6,7 @@ from app.history import HistoryManager
 class ClearCommand(Command):
     """Clear Class"""
     def __init__(self):
-        """Initialize LoadCommand.""" 
+        """Initialize ClearCommand.""" 
 
     def execute(self, args):
         """ Execute Clear """

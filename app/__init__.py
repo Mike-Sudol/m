@@ -89,4 +89,5 @@ class App:
         finally:
             logging.info("Application shutdown.")
 
-# save, clear, and delete history records
+# delete history records
+# Add logging to histroy manager

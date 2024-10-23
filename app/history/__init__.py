@@ -55,8 +55,19 @@ class HistoryManager:
             print("No history to delete from.")
 
     @staticmethod
+    def save_history(): 
+        """Saving the history of the CSV"""
+        if os.path.exists(HistoryManager.file_name):
+            history = pd.read_csv(HistoryManager.file_name)
+        else:
+            history = pd.DataFrame(columns=['Operation', 'Num1', 'Num2', 'Result'])
+        
+        history.to_csv(HistoryManager.file_name, index=False)
+        print("Saved Sucessfully")
+
+    @staticmethod
     def display_history():
-        # Display the current history in memory
+        """Display the history of the CSV"""
         if os.path.exists(HistoryManager.file_name):
             history = pd.read_csv(HistoryManager.file_name)
             if history.empty:
@@ -65,6 +76,7 @@ class HistoryManager:
                 print(history)
         else:
             print("No history found.")
+
 
 # HistoryManager.add_record("add", 5, 5, 10)
 # HistoryManager.display_history()
