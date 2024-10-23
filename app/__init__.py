@@ -91,5 +91,5 @@ class App:
         finally:
             logging.info("Application shutdown.")
 
-# Testing and Git Action 
+# Testing and Git Action
 # Write Up + Video + How to start Readme
