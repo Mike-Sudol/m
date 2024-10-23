@@ -11,10 +11,10 @@ ignore-paths=/usr/lib/python3/dist-packages/six.py
 disable= unused-argument,
          invalid-name,
          line-too-long,
-         redefined-outer-name,
-         unused-import,
+         redefined-outer-name, 
          logging-fstring-interpolation,
-         duplicate-code
+         duplicate-code,
+         protected-access
 
 [REPORTS]
 # Set the output format. Available formats: text, parseable, colorized, json, msvs (visual studio) and html

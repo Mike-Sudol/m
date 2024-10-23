@@ -1,7 +1,6 @@
 """Tests Command and CommandHandler """
 
 from unittest.mock import patch
-import pytest
 from app.commands import Command, CommandHandler
 
 class TestCommand(Command):

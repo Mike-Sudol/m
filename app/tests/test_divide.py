@@ -1,5 +1,4 @@
 """Test Dividing"""
-from decimal import InvalidOperation
 import pytest
 from app.commands import CommandHandler
 from app.plugins.divide import DivideCommand
