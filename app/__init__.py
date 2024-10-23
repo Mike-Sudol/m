@@ -89,8 +89,6 @@ class App:
         finally:
             logging.info("Application shutdown.")
 
-# Add logging to history manager
 # Testing and Git Action
 # Environment Flexibility
-# Write Up + Video + How to start Readme
-# Extensive & adaptable logging 
+# Write Up + Video + How to start Readme 
