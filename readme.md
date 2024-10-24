@@ -20,17 +20,17 @@ python3 main.py
 
 ```
 - add : num1 num2  Addition
-- subtract : Subtraction
-- multiply : Multiplication
-- divide : Division
-- talk : Shows the list of commands
+- subtract : num1 num2 Subtraction
+- multiply : num1 num2  Multiplication
+- divide : num1 num2  Division
+- talk : args Prints out arguments
 - menu : Shows the list of commands
-- exit : Exit the application
-- display : Exit the application
-- load : Exit the application
-- save : Exit the application
-- delete : Exit the application
-- clear : Exit the application
+- exit : Exits the application
+- display : Shows Calculation History
+- load : Loads Calculation History from file
+- save : Save Calculation History to file 
+- delete : index Delete a record from Calculation History at an index
+- clear : Clears Calculation History
 ```
 ## Design Patterns
 
