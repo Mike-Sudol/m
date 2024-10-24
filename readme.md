@@ -72,7 +72,7 @@ clear
 
 ## Video
 
-Create a 3-5 minute video demonstration of using the calculator, highlighting its key features and functionalities. Link the video to the repository readme.
+[Video Demonstration](images/video.mkv)
 
 ## Design Patterns
 

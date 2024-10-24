@@ -84,11 +84,9 @@ class App:
                     command = user_input[0].lower()
                     args = user_input[1:]
                     result = self.command_handler.execute_command(command, args)
-                    if command in ["add","subtract","divide","multiply"]:
+                    if command in ["add","subtract","divide","multiply"] and result is not None:
                         self.history.add_record(command, args[0], args[1], result)
         except App.Error as e:
             logging.info("Error while executing command %s",e)
         finally:
             logging.info("Application shutdown.")
-
-# Write Up + Video + How to start Readme

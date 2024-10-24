@@ -1,7 +1,6 @@
-import pytest
-import os
-import logging
+"""Test App"""
 from unittest.mock import patch, MagicMock
+import pytest
 from app import App
 from app.commands import Command, CommandHandler
 from app.history import HistoryManager
@@ -115,7 +114,6 @@ class TestApp:
         mock_iter_modules.return_value = [
             (None, "test_plugin", True)
         ]
-        
         # Mock plugin module with command
         mock_module = MagicMock()
         mock_module.TestCommand = MockCommand
