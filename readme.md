@@ -41,12 +41,22 @@ Create a 3-5 minute video demonstration of using the calculator, highlighting it
 ## Design Patterns
 
 ***Command Pattern***
-wh
+
+We Use Command Pattern as a base for all of our plugin commands
+
 ![commandPattern](images/CommandPattern.png)
 
 ***Singleton Pattern***
 
-***Factory Method Pattern***
+Our main Application class acts as singleton for entire software
+
+![SingletonPattern](images/SingletonPattern.png)
+
+***Factory Pattern***
+
+We use Command Pattern as a base for all of our plugin commands
+
+![commandPattern](images/CommandPattern.png)
 
 ***Template Method Pattern***
 
@@ -58,29 +68,32 @@ wh
 
 ***"Look Before You Leap" (LBYL)***
 
-if "possible_key" in data_dict:
-    value = data_dict["possible_key"]
-else:
-    # Handle missing keys here...
+Look Before You Leap is used extensively in the HistoryManager
+
+![LBYL](images/LBYL.png)
 
 ***"Easier to Ask for Forgiveness than Permission" (EAFP)***
 
-try:
-     value = data_dict["possible_key"]
-except KeyError:
-    # Handle missing keys here...
+Easier to Ask for Forgiveness than Permission is used all throughout, two instances of it are we use EAFP when loading up files and when executing commands
+
+![EAFP1](images/EAFP1.png)
+
+![EAFP2](images/EAFP2.png)
 
 ## Logging
 
-Dynamic logging configuration through environment variables is performed. A professional logging system is designed and logs will contain all the critical steps while performing any operation. Detailed application operations, data manipulations, errors, and informational messages are provided using Logging. This system also retrieves and displays errors and handles exceptions without crashing the applications. Logging is majorly used in this application rather than print statements.
+Logging is used for tracking normal calculator operations as well as loading files, enivornment variables, errors, exceptions, and warnings. Logs are stored in logs/app.log
 
-- `logging.info`- logs what happened in the line of code
-- `logging.error` - logs the error that occurred after the line of code
+![Logging](images/Logging.png)
 
 ## Environment Variables
 
-The application configuration details, development, and testing environment variables are stored in .env file.
+Environment variables are used in deciding enviroment for either production/development and another for the location of data output of our software
 
-https://github.com/karthikyeluripati/midterm_calculator/blob/f04dbbbde32de241a0cf74f8364f4667a5c635b7/app/__init__.py#L32-L41
+![Env](images/Env.png)
 
 ## Testing 
+
+A high coverage of 94% is achieved in the tests
+
+![testing](images/Testing.png)
