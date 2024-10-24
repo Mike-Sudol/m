@@ -72,7 +72,7 @@ clear
 
 ## Video
 
-[Video Demonstration](images/video.mkv)
+[Video Demonstration](https://www.youtube.com/watch?v=cXkofdn8nUQ)
 
 ## Design Patterns
 
