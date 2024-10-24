@@ -23,17 +23,50 @@ python3 main.py
 
 add : num1 num2  
 
-- subtract : num1 num2 Subtraction
-- multiply : num1 num2  Multiplication
-- divide : num1 num2  Division
-- talk : args Prints out arguments
-- menu : Shows the list of commands
-- exit : Exits the application
-- display : Shows Calculation History
-- load : Loads Calculation History from file
-- save : Save Calculation History to file 
-- delete : index Delete a record from Calculation History at an index
-- clear : Clears Calculation History
+- Subtraction
+
+subtract : num1 num2 
+
+- Multiplication
+
+multiply : num1 num2  
+
+- Division
+
+divide : num1 num2  
+
+- Print out arguments
+
+talk : args 
+
+- Shows the list of commands
+
+menu 
+
+- Exits the application 
+
+exit 
+
+- Show Calculation History 
+
+display
+
+- Load Calculation History from file
+
+load
+
+- Save Calculation History to file 
+
+save
+
+- Delete a record from Calculation History at an index
+
+delete : index 
+
+- Clear Calculation History
+
+clear
+
 ```
 
 
@@ -45,9 +78,15 @@ Create a 3-5 minute video demonstration of using the calculator, highlighting it
 
 ***Command Pattern***
 
-We Use Command Pattern as a base for all of our plugin commands
+We Use Command Pattern through CommandHandler for all of our commands
 
-![commandPattern](images/CommandPattern.png)
+![commandHandler](images/commandHandler.png)
+
+***REPL Pattern***
+
+In our Application class we use a REPL loop as the main loop for our program
+
+![REPL](images/REPL.png)
 
 ***Singleton Pattern***
 
@@ -55,15 +94,11 @@ Our main Application class acts as singleton for entire software
 
 ![SingletonPattern](images/SingletonPattern.png)
 
-***Factory Pattern***
+***Template Pattern***
 
-We use Command Pattern as a base for all of our plugin commands
+We use Template Pattern through our abstract Command Class as a base for all of our plugin commands
 
-![commandPattern](images/CommandPattern.png)
-
-***Template Method Pattern***
-
-***Iterator Pattern***
+![command](images/command.png)
 
 
 
