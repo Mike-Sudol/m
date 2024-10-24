@@ -19,7 +19,10 @@ python3 main.py
 ## Commands
 
 ```
-- add : num1 num2  Addition
+- Addition
+
+add : num1 num2  
+
 - subtract : num1 num2 Subtraction
 - multiply : num1 num2  Multiplication
 - divide : num1 num2  Division
